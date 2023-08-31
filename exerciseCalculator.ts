@@ -8,8 +8,8 @@ interface Result {
   average: number;
 }
 
-interface ExerciseInputValues {
-  exerciseHours: number[];
+export interface ExerciseInputValues {
+  daily_exercises: number[];
   target: number;
 }
 
@@ -28,14 +28,14 @@ const parseExerciseArguments = (args: string[]): ExerciseInputValues => {
   if (isNaN(target)) {
     throw new Error('Target must be number!');
   }
-  const exerciseHours = args.slice(3).map(input => {
+  const daily_exercises = args.slice(3).map(input => {
     const hours = Number(input);
     if (isNaN(hours)) {
       throw new Error('Provided values were not numbers!');
     }
     return hours;
   });
-  return { exerciseHours, target };
+  return { daily_exercises, target };
 };
 
 
@@ -58,7 +58,7 @@ const ratingCalculator = (average: number, target: number): RatingResult => {
     };
 };
 
-const calculateExercises = (exerciseHours: number[], target: number): Result => {
+export const calculateExercises = (exerciseHours: number[], target: number): Result => {
   const periodLength = exerciseHours.length;
   const trainingDays = exerciseHours.reduce((count, hours) => count + (hours > 0 ? 1 : 0), 0);
   const totalhours = exerciseHours.reduce((a, b) => a + b, 0);
@@ -76,8 +76,8 @@ const calculateExercises = (exerciseHours: number[], target: number): Result => 
 };
 
 try {
-  const { exerciseHours, target } = parseExerciseArguments(process.argv);
-  const result = calculateExercises(exerciseHours, target);
+  const { daily_exercises, target } = parseExerciseArguments(process.argv);
+  const result = calculateExercises(daily_exercises, target);
   console.log(result);
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.';
