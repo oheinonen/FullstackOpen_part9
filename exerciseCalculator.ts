@@ -35,8 +35,8 @@ const parseExerciseArguments = (args: string[]): ExerciseInputValues => {
     }
     return hours;
   });
-  return { exerciseHours, target }
-}
+  return { exerciseHours, target };
+};
 
 
 const ratingCalculator = (average: number, target: number): RatingResult => {
@@ -44,27 +44,26 @@ const ratingCalculator = (average: number, target: number): RatingResult => {
     return {
       rating: 1,
       ratingDescription: 'you can do better than this...',
-    }
+    };
   }
   if (average > target + 1) {
     return {
       rating: 3,
       ratingDescription: 'you\'re on fire!',
-    }
+    };
   }
   return {
       rating: 2,
       ratingDescription: 'it\'s ok',
-    }
-
-}
+    };
+};
 
 const calculateExercises = (exerciseHours: number[], target: number): Result => {
   const periodLength = exerciseHours.length;
   const trainingDays = exerciseHours.reduce((count, hours) => count + (hours > 0 ? 1 : 0), 0);
-  const totalhours = exerciseHours.reduce((a, b) => a + b, 0)
+  const totalhours = exerciseHours.reduce((a, b) => a + b, 0);
   const average = totalhours / periodLength;
-  const { rating, ratingDescription } = ratingCalculator(average, target)
+  const { rating, ratingDescription } = ratingCalculator(average, target);
   return {
     periodLength,
     trainingDays,
@@ -73,15 +72,15 @@ const calculateExercises = (exerciseHours: number[], target: number): Result => 
     ratingDescription,
     target,
     average,
-  }
-}
+  };
+};
 
 try {
   const { exerciseHours, target } = parseExerciseArguments(process.argv);
-  const result = calculateExercises(exerciseHours, target)
+  const result = calculateExercises(exerciseHours, target);
   console.log(result);
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
