@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import diaryService from '../services/diaries';
 import ErrorNotification from './ErrorNotification';
+import { Weather, Visibility } from '../types';
 
 const DiaryForm = () => {
   const [date, setDate] = useState('');
-  const [weather, setWeather] = useState('');
-  const [visibility, setVisibility] = useState('');
+  const [weather, setWeather] = useState(Weather.Sunny);
+  const [visibility, setVisibility] = useState(Visibility.Great);
   const [comment, setComment] = useState('');
   const [errorMessage, setErrorMessage] = useState<string|null>(null)
 
@@ -30,8 +31,8 @@ const DiaryForm = () => {
       notify(result);
     } else {
       setDate('');
-      setVisibility('');
-      setWeather('');
+      setVisibility(Visibility.Great);
+      setWeather(Weather.Sunny);
       setComment('');
     }
   };
@@ -41,19 +42,44 @@ const DiaryForm = () => {
       { errorMessage && <ErrorNotification errorMessage={errorMessage}/>}
       <form onSubmit={diaryCreation}>
         <p>
-        date<input value={date} onChange={(event) => {
-          setDate(event.target.value);
-        }} />
+          date
+          <input
+            type="date"
+            value={date}
+            onChange={(event) => {
+              setDate(event.target.value);
+            }}/>
         </p>
         <p>
-        visibility<input value={visibility} onChange={(event) => {
-          setVisibility(event.target.value);
-        }} />
+        visibility {Object.values(Visibility).map((option) => (
+          <label key={option}>
+            <input
+              type="radio"
+              value={option}
+              checked={visibility === option}
+              onChange={(event) => {
+                setVisibility(event.target.value as Visibility);
+              }}
+            />
+            {option}
+          </label>
+        ))}
+
         </p>
         <p>
-        weather<input value={weather} onChange={(event) => {
-          setWeather(event.target.value);
-        }} />
+        weather {Object.values(Weather).map((weatherOption) => (
+          <label key={weatherOption}>
+            <input
+              type="radio"
+              value={weatherOption}
+              checked={weather === weatherOption}
+              onChange={(event) => {
+                setWeather(event.target.value as Weather);
+              }}
+            />
+            {weatherOption}
+          </label>
+        ))}
         </p>
         <p>
         comment<input value={comment} onChange={(event) => {
