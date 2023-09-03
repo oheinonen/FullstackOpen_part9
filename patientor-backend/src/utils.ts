@@ -16,8 +16,8 @@ const parseEntriesField = (entries: unknown): Entry[] => {
   const parsedEntries: Entry[] = [];
 
   entries.forEach((entry) => {
-    if (isEnumValue(entry.type)) {
-      parsedEntries.push(entry);
+    if (isEnumValue(entry.type as EntryType)) {
+      parsedEntries.push(entry as Entry);
     } else {
       throw new Error('Invalid entry type');
     }
