@@ -1,33 +1,36 @@
-import { NewPatient, Gender } from './types';
+import { NewPatient, Entry, EntryType, Gender } from './types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
+const isEnumValue = (value: string): value is EntryType => {
+  return Object.values(EntryType).includes(value as EntryType);
+};
+
+const parseEntriesField = (entries: unknown): Entry[] => {
+  if (!Array.isArray(entries)) {
+    throw new Error('Entries should be an array');
+  }
+
+  const parsedEntries: Entry[] = [];
+
+  entries.forEach((entry) => {
+    if (isEnumValue(entry.type)) {
+      parsedEntries.push(entry);
+    } else {
+      throw new Error('Invalid entry type');
+    }
+  });
+
+  return parsedEntries;
+};
 
 const parseStringField = (field: unknown, fieldName: string): string => {
   if (!isString(field)) {
     throw new Error(`Incorrect or missing ${fieldName}`);
   }
   return field;
-};
-
-const parseEntriesField = (entries: unknown) => {
-  if (!Array.isArray(entries)) {
-    throw new Error(`Entries should be an array`);
-  }
-
-  const parsedEntries: string[] = [];
-
-  for (let i = 0; i < entries.length; i++) {
-    try {
-      const entry = parseStringField(entries[i], 'entry');
-      parsedEntries.push(entry);
-    } catch (error) {
-      throw new Error(`Incorrect or missing entries`);
-    }
-  }
-  return parsedEntries;
 };
 
 const isDate = (date: string): boolean => {
