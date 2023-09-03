@@ -1,4 +1,3 @@
-
 import { NewPatient, Gender } from './types';
 
 const isString = (text: unknown): text is string => {
@@ -11,6 +10,24 @@ const parseStringField = (field: unknown, fieldName: string): string => {
     throw new Error(`Incorrect or missing ${fieldName}`);
   }
   return field;
+};
+
+const parseEntriesField = (entries: unknown) => {
+  if (!Array.isArray(entries)) {
+    throw new Error(`Entries should be an array`);
+  }
+
+  const parsedEntries: string[] = [];
+
+  for (let i = 0; i < entries.length; i++) {
+    try {
+      const entry = parseStringField(entries[i], 'entry');
+      parsedEntries.push(entry);
+    } catch (error) {
+      throw new Error(`Incorrect or missing entries`);
+    }
+  }
+  return parsedEntries;
 };
 
 const isDate = (date: string): boolean => {
@@ -41,13 +58,14 @@ const toNewPatient = (object: unknown): NewPatient => {
     throw new Error('Incorrect or missing data');
   }
 
-  if ('name' in object && 'dateOfBirth' in object && 'ssn' in object && 'gender' in object && 'occupation' in object)  {
+  if ('name' in object && 'dateOfBirth' in object && 'ssn' in object && 'gender' in object && 'occupation' in object && 'entries' in object) {
     const newPatient: NewPatient = {
       name: parseStringField(object.name, 'name'),
       dateOfBirth: parseDateOfBirth(object.dateOfBirth),
       ssn: parseStringField(object.ssn, 'ssn'),
       gender: parseGender(object.gender),
       occupation: parseStringField(object.occupation, 'occupation'),
+      entries: parseEntriesField(object.entries)
     };
   
     return newPatient;
