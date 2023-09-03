@@ -15,6 +15,6 @@ const Diary = (props: DiaryProps) => {
       </p>
 
     </div>
-  )
+  );
 };
 export default Diary;
